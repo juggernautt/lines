@@ -1,4 +1,4 @@
-var N = 9;
+var N = 5;
 var COLORS = ['RED', 'YELLOW', 'PURPLE', 'GREEN', 'BLUE'];
 var numOfNewBalls = 3;
 
@@ -106,18 +106,27 @@ function fieldPutBallInEmptyCellNumberX(field, x, ball) {
     var count = 0;
     for (var i = 0; i < field.length; i++) {
         for (var j = 0; j < field[i].length; j++) {
-            if(field[i][j] == null) {
+            if (field[i][j] == null) {
                 count++;
             }
-            if(count == x) {
+            if (count == x) {
                 field[i][j] = ball;
                 return true;
             }
         }
     }
-    return field;
 }
 
+/**
+ * Remove all balls that forms five-same-colors horizontal, vertical or diagonal
+ * Function updates field parameter (put `nulls` in place of removed balls)
+ *
+ * @param field
+ * @return integer amount of removed balls
+ */
+function fieldRemoveMatchingLines(field) {
+
+}
 
 /**
  * randomly replaces values of field array with the values from random colors array
@@ -128,7 +137,7 @@ function fieldPutBallInEmptyCellNumberX(field, x, ball) {
 function fieldPutBallsInRandomPlaces(field, balls) {
 
     // check that field's empty space sufficient to put all the balls
-    if(fieldGetEmptyPlacesCount(field) < balls.length) {
+    if (fieldGetEmptyPlacesCount(field) < balls.length) {
         return false;
     }
 
@@ -145,16 +154,18 @@ function fieldPutBallsInRandomPlaces(field, balls) {
  * return "null" if nothing is selected
  * return object {row: 5, column: 3} if that cell is selected
  */
-function getSelectedFieldCoords()
-{
-}
-
-
-function fieldMoveBall(field, fromRow, fromColumn, toRow, toColumn)
-{
+function getSelectedFieldCoords(container) {
 
 }
 
+function isMovePossible(field, fromRow, fromColumn, toRow, toColumn) {
+    return true;
+}
+
+function fieldMoveBall(field, fromRow, fromColumn, toRow, toColumn) {
+    field[toRow][toColumn] = field[fromRow][fromColumn];
+    field[fromRow][fromColumn] = null;
+}
 
 $(document).ready(function () {
     var container = $('#the-field');
@@ -181,7 +192,7 @@ $(document).ready(function () {
     });
 
 
-    container.on("click", "div", function(e) {
+    container.on("click", "div", function () {
         // 1. add class selected to mark selected cell
         // 2. SELECTION: if the cell being clicked has ball in it:
         //                  - deselect previously selected ball (if any) <== $('#the-field div').removeClass('selected')

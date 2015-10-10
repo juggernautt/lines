@@ -54,3 +54,7 @@
 [ball='PURPLE'] {
     background-color: purple;
 }
+
+.selected {
+    outline: 2px solid orange;
+}
