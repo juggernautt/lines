@@ -94,6 +94,31 @@ function fieldGetEmptyPlacesCount(field) {
     return count;
 }
 
+
+/**
+ * traverse the field and count empty cells. Once you arrive to Xth empty cell - put the ball
+ * @param field
+ * @param x
+ * @param ball
+ * @returns {*}
+ */
+function fieldPutBallInEmptyCellNumberX(field, x, ball) {
+    var count = 0;
+    for (var i = 0; i < field.length; i++) {
+        for (var j = 0; j < field[i].length; j++) {
+            if(field[i][j] == null) {
+                count++;
+            }
+            if(count == x) {
+                field[i][j] = ball;
+                return true;
+            }
+        }
+    }
+    return field;
+}
+
+
 /**
  * randomly replaces values of field array with the values from random colors array
  * @param field
@@ -102,18 +127,32 @@ function fieldGetEmptyPlacesCount(field) {
  */
 function fieldPutBallsInRandomPlaces(field, balls) {
 
-    for (var i = 0; i < field.length; i++) {
-        for (var j = 0; j < field[i].length; j++) {
-            if (field[i][j] == null) {
-                field[i][j] = balls.shift();
-                if (balls.length == 0) {
-                    return true;
-                }
-            }
-        }
+    // check that field's empty space sufficient to put all the balls
+    if(fieldGetEmptyPlacesCount(field) < balls.length) {
+        return false;
     }
 
-    return false;
+    while (balls.length > 0) {
+        var theBall = balls.shift();
+        var randomNum = _.random(1, fieldGetEmptyPlacesCount(field));
+        fieldPutBallInEmptyCellNumberX(field, randomNum, theBall);
+    }
+    return true;
+}
+
+
+/**
+ * return "null" if nothing is selected
+ * return object {row: 5, column: 3} if that cell is selected
+ */
+function getSelectedFieldCoords()
+{
+}
+
+
+function fieldMoveBall(field, fromRow, fromColumn, toRow, toColumn)
+{
+
 }
 
 
@@ -137,6 +176,18 @@ $(document).ready(function () {
         fieldDraw(field, container);
         randomBalls = getRandomBalls(numOfNewBalls);
         previewColors(randomBalls, newColors);
+
+
+    });
+
+
+    container.on("click", "div", function(e) {
+        // 1. add class selected to mark selected cell
+        // 2. SELECTION: if the cell being clicked has ball in it:
+        //                  - deselect previously selected ball (if any) <== $('#the-field div').removeClass('selected')
+        //                  - select currently clicked ball
+        // 3. MOVING: if the cell being clicked has no ball in it:
+        //                  - if something was selected already
 
     });
 
