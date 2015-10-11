@@ -155,8 +155,20 @@ function fieldPutBallsInRandomPlaces(field, balls) {
  * return object {row: 5, column: 3} if that cell is selected
  */
 function getSelectedFieldCoords(container) {
-
+    if($('.selected', container).length > 0) {
+        var div = $('.selected', container);
+        var row = div.attr('row');
+        var column =  div.attr('column');
+        return {
+            row: row,
+            column: column
+        };
+    } else {
+      return null;
+    }
 }
+
+
 
 function isMovePossible(field, fromRow, fromColumn, toRow, toColumn) {
     return true;
@@ -193,12 +205,29 @@ $(document).ready(function () {
 
 
     container.on("click", "div", function () {
-        // 1. add class selected to mark selected cell
-        // 2. SELECTION: if the cell being clicked has ball in it:
-        //                  - deselect previously selected ball (if any) <== $('#the-field div').removeClass('selected')
-        //                  - select currently clicked ball
-        // 3. MOVING: if the cell being clicked has no ball in it:
-        //                  - if something was selected already
+
+        //SELECTION: if the cell being clicked has ball in it:
+        if($(this).attr('ball') != undefined) {
+            //deselect previously selected ball
+            $('#the-field div').removeClass('selected');
+            //select currently clicked ball
+            $(this).addClass('selected');
+
+        //MOVING: if the cell being clicked has no ball in it:
+        } else {
+            //if something was selected already
+            if(getSelectedFieldCoords(container) != null) {
+                var fromRow = getSelectedFieldCoords(container).row;
+                var fromColumn = getSelectedFieldCoords(container).column;
+                var toRow = $(this).attr('row');
+                var toColumn = $(this).attr('column');
+                fieldMoveBall(field, fromRow,fromColumn, toRow, toColumn);
+                fieldDraw(field, container);
+
+
+            }
+        }
+
 
     });
 
