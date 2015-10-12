@@ -1,6 +1,7 @@
-var N = 5;
+var N = 9;
 var COLORS = ['RED', 'YELLOW', 'PURPLE', 'GREEN', 'BLUE'];
 var numOfNewBalls = 3;
+var numOfMatchingBalls = 5;
 
 /**
  * creates multidimensional array (n*n field) filled up with nulls
@@ -117,6 +118,88 @@ function fieldPutBallInEmptyCellNumberX(field, x, ball) {
     }
 }
 
+
+function fieldCountHorizontal(field, row, column) {
+    if(field[row][column] == null) {
+        return 0;
+    }
+    var count = 1;
+    var theBall = field[row][column];
+    while(column < field.length-1) {
+
+        if(theBall === field[row][column + 1]) {
+            count++;
+        } else {
+            return count;
+        }
+        column++;
+    }
+    return count;
+}
+
+function removeHorizontalN (field, row, column, num) {
+    if(num >= numOfMatchingBalls) {
+       for(var i=0; i<num; i++) {
+            field[row][column] = null;
+            column++;
+        }
+    }
+}
+
+
+function fieldCountVertical (field, row, column) {
+    if(field[row][column] == null) {
+        return 0;
+    }
+    var count = 1;
+    var theBall = field[row][column];
+    while(row < field.length-1) {
+        if(theBall === field[row + 1][column]) {
+            count++;
+        } else {
+            return count;
+        }
+        row++;
+    }
+    return count;
+}
+
+function removeVerticalN (field, row, column, num) {
+    if(num >= numOfMatchingBalls) {
+        for(var i=0; i<num; i++) {
+            field[row][column] = null;
+            row++;
+        }
+    }
+}
+
+function fieldCountDiagonal (field, row, column) {
+    if(field[row][column] == null) {
+        return 0;
+    }
+    var count = 1;
+    var theBall = field[row][column];
+    while(row < field.length-1 && column < field.length-1) {
+        if(theBall === field[row + 1][column + 1]) {
+            count++;
+        } else {
+            return count;
+        }
+        row++;
+        column++;
+    }
+    return count;
+}
+
+function removeDiagonalN (field, row, column, num) {
+    if(num >= numOfMatchingBalls) {
+        for(var i=0; i<num; i++) {
+            field[row][column] = null;
+            row++;
+            column++;
+        }
+    }
+}
 /**
  * Remove all balls that forms five-same-colors horizontal, vertical or diagonal
  * Function updates field parameter (put `nulls` in place of removed balls)
@@ -125,7 +208,19 @@ function fieldPutBallInEmptyCellNumberX(field, x, ball) {
  * @return integer amount of removed balls
  */
 function fieldRemoveMatchingLines(field) {
+    for (var i = 0; i < field.length; i++) {
+        for (var j = 0; j < field[i].length; j++) {
 
+            var numHorizontal = fieldCountHorizontal(field, i, j);
+            removeHorizontalN(field, i, j, numHorizontal);
+
+            var numVertical = fieldCountVertical(field, i, j);
+            removeVerticalN(field, i, j, numVertical);
+
+            var numDiagonal = fieldCountDiagonal(field, i,j);
+            removeDiagonalN(field, i, j, numDiagonal);
+        }
+    }
 }
 
 /**
@@ -199,12 +294,20 @@ $(document).ready(function () {
         fieldDraw(field, container);
         randomBalls = getRandomBalls(numOfNewBalls);
         previewColors(randomBalls, newColors);
+        fieldRemoveMatchingLines(field);
+        fieldDraw(field, container);
+
 
 
     });
 
 
     container.on("click", "div", function () {
+
+        if (!fieldPutBallsInRandomPlaces(field, randomBalls)) {
+            alert("game over");
+            return false;
+        }
 
         //SELECTION: if the cell being clicked has ball in it:
         if($(this).attr('ball') != undefined) {
@@ -223,6 +326,15 @@ $(document).ready(function () {
                 var toColumn = $(this).attr('column');
                 fieldMoveBall(field, fromRow,fromColumn, toRow, toColumn);
                 fieldDraw(field, container);
+
+                fieldRemoveMatchingLines(field);
+                fieldDraw(field, container);
+
+
+                randomBalls = getRandomBalls(numOfNewBalls);
+                previewColors(randomBalls, newColors);
+
+
 
 
             }
