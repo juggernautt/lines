@@ -3,6 +3,7 @@ var COLORS = ['RED', 'YELLOW', 'PURPLE', 'GREEN', 'BLUE'];
 var numOfNewBalls = 3;
 var numOfMatchingBalls = 5;
 
+
 /**
  * creates multidimensional array (n*n field) filled up with nulls
  * @param n
@@ -138,12 +139,15 @@ function fieldCountHorizontal(field, row, column) {
 }
 
 function removeHorizontalN (field, row, column, num) {
+    var numOfBallsToRemove = 0;
     if(num >= numOfMatchingBalls) {
        for(var i=0; i<num; i++) {
             field[row][column] = null;
             column++;
+           numOfBallsToRemove++;
         }
     }
+    return numOfBallsToRemove;
 }
 
 
@@ -165,12 +169,15 @@ function fieldCountVertical (field, row, column) {
 }
 
 function removeVerticalN (field, row, column, num) {
+    var numOfBallsToRemove = 0;
     if(num >= numOfMatchingBalls) {
         for(var i=0; i<num; i++) {
             field[row][column] = null;
             row++;
+            numOfBallsToRemove++;
         }
     }
+    return numOfBallsToRemove;
 }
 
 function fieldCountDiagonal (field, row, column) {
@@ -192,14 +199,19 @@ function fieldCountDiagonal (field, row, column) {
 }
 
 function removeDiagonalN (field, row, column, num) {
+    var numOfBallsToRemove = 0;
     if(num >= numOfMatchingBalls) {
         for(var i=0; i<num; i++) {
             field[row][column] = null;
             row++;
             column++;
+            numOfBallsToRemove++;
         }
     }
+    return numOfBallsToRemove;
 }
+
+
 /**
  * Remove all balls that forms five-same-colors horizontal, vertical or diagonal
  * Function updates field parameter (put `nulls` in place of removed balls)
@@ -208,20 +220,26 @@ function removeDiagonalN (field, row, column, num) {
  * @return integer amount of removed balls
  */
 function fieldRemoveMatchingLines(field) {
+    var count = 0;
     for (var i = 0; i < field.length; i++) {
         for (var j = 0; j < field[i].length; j++) {
 
             var numHorizontal = fieldCountHorizontal(field, i, j);
-            removeHorizontalN(field, i, j, numHorizontal);
+            count+=removeHorizontalN(field, i, j, numHorizontal);
 
             var numVertical = fieldCountVertical(field, i, j);
-            removeVerticalN(field, i, j, numVertical);
+            count+=removeVerticalN(field, i, j, numVertical);
 
             var numDiagonal = fieldCountDiagonal(field, i,j);
-            removeDiagonalN(field, i, j, numDiagonal);
+            count+=removeDiagonalN(field, i, j, numDiagonal);
+
         }
     }
+    return count;
 }
+
+
+
 
 /**
  * randomly replaces values of field array with the values from random colors array
@@ -277,6 +295,8 @@ function fieldMoveBall(field, fromRow, fromColumn, toRow, toColumn) {
 $(document).ready(function () {
     var container = $('#the-field');
     var newColors = $('#new-colors');
+    var scores = $('#counter');
+    var totalScore = 0;
     container.css({'width': N * 54, 'height': N * 54});
     newColors.css('width', numOfNewBalls * 54);
 
@@ -294,8 +314,8 @@ $(document).ready(function () {
         fieldDraw(field, container);
         randomBalls = getRandomBalls(numOfNewBalls);
         previewColors(randomBalls, newColors);
-        fieldRemoveMatchingLines(field);
-        fieldDraw(field, container);
+        //fieldRemoveMatchingLines(field);
+        //fieldDraw(field, container);
 
 
 
@@ -327,9 +347,10 @@ $(document).ready(function () {
                 fieldMoveBall(field, fromRow,fromColumn, toRow, toColumn);
                 fieldDraw(field, container);
 
-                fieldRemoveMatchingLines(field);
+                totalScore+=fieldRemoveMatchingLines(field);
                 fieldDraw(field, container);
 
+                scores.html('Scores: ' + totalScore);
 
                 randomBalls = getRandomBalls(numOfNewBalls);
                 previewColors(randomBalls, newColors);
