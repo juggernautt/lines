@@ -1,7 +1,7 @@
-var N = 9;
+var N = 4;
 var COLORS = ['RED', 'YELLOW', 'PURPLE', 'GREEN', 'BLUE'];
 var numOfNewBalls = 3;
-var numOfMatchingBalls = 5;
+var numOfMatchingBalls = 3;
 
 
 /**
@@ -180,32 +180,47 @@ function removeVerticalN (field, row, column, num) {
     return numOfBallsToRemove;
 }
 
-function fieldCountDiagonal (field, row, column) {
+function fieldCountDiagonal (field, row, column, isLeftRightDirection) {
     if(field[row][column] == null) {
         return 0;
     }
     var count = 1;
     var theBall = field[row][column];
+
     while(row < field.length-1 && column < field.length-1) {
-        if(theBall === field[row + 1][column + 1]) {
+        if(theBall === field[row + 1][column + 1] || theBall === field[row + 1][column -1]) {
             count++;
         } else {
             return count;
         }
-        row++;
-        column++;
+        if(isLeftRightDirection) {
+            row++;
+            column++;
+
+        } else {
+            row++;
+            column--;
+        }
+
     }
     return count;
 }
 
-function removeDiagonalN (field, row, column, num) {
+function removeDiagonalN (field, row, column, num, isLeftRightDirection) {
     var numOfBallsToRemove = 0;
     if(num >= numOfMatchingBalls) {
         for(var i=0; i<num; i++) {
             field[row][column] = null;
-            row++;
-            column++;
-            numOfBallsToRemove++;
+            if(isLeftRightDirection) {
+                row++;
+                column++;
+                numOfBallsToRemove++;
+            } else {
+                row++;
+                column--;
+                numOfBallsToRemove++;
+            }
+
         }
     }
     return numOfBallsToRemove;
@@ -230,8 +245,11 @@ function fieldRemoveMatchingLines(field) {
             var numVertical = fieldCountVertical(field, i, j);
             count+=removeVerticalN(field, i, j, numVertical);
 
-            var numDiagonal = fieldCountDiagonal(field, i,j);
-            count+=removeDiagonalN(field, i, j, numDiagonal);
+            var numDiagonalLeftRight = fieldCountDiagonal(field, i,j, true);
+            count+=removeDiagonalN(field, i, j, numDiagonalLeftRight, true);
+
+            var numDiagonalRightLeft = fieldCountDiagonal(field, i,j, false);
+            count+=removeDiagonalN(field, i, j, numDiagonalRightLeft, false);
 
         }
     }
@@ -296,6 +314,7 @@ $(document).ready(function () {
     var container = $('#the-field');
     var newColors = $('#new-colors');
     var scores = $('#counter');
+    var gameOver = $('#game-over');
     var totalScore = 0;
     container.css({'width': N * 54, 'height': N * 54});
     newColors.css('width', numOfNewBalls * 54);
@@ -325,7 +344,7 @@ $(document).ready(function () {
     container.on("click", "div", function () {
 
         if (!fieldPutBallsInRandomPlaces(field, randomBalls)) {
-            alert("game over");
+            gameOver.show();
             return false;
         }
 

@@ -7,13 +7,29 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script type="text/javascript" src="lines.js"></script>
+    <script type="text/javascript" src="formSubmit.js"></script>
 
 </head>
 <body>
+<div id="container">
+
     <div id="new-colors"></div>
+    <div id="counter">Scores: </div>
     <div id="the-field">
     </div>
     <button id="next-round">Next Round</button>
-    <div id="counter"></div>
+    <div id="game-over">
+        <p>Game Over</p>
+        <form>
+            <label for="name">Please enter your name: </label>
+            <input type="text" name="name" id="name">
+            <input type="submit">
+
+        </form>
+        <div><ul id="ratings"></ul></div>
+    </div>
+
+</div>
+
 </body>
 </html>
