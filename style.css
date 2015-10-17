@@ -92,7 +92,11 @@
     font-style: italic;
 }
 
+#game-over div {
+    margin: 0 auto;
+    width: 400px;
 
+}
 #game-over ul {
     list-style: none;
 

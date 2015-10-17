@@ -1,4 +1,4 @@
-var N = 4;
+var N = 5;
 var COLORS = ['RED', 'YELLOW', 'PURPLE', 'GREEN', 'BLUE'];
 var numOfNewBalls = 3;
 var numOfMatchingBalls = 3;
@@ -121,14 +121,14 @@ function fieldPutBallInEmptyCellNumberX(field, x, ball) {
 
 
 function fieldCountHorizontal(field, row, column) {
-    if(field[row][column] == null) {
+    if (field[row][column] == null) {
         return 0;
     }
     var count = 1;
     var theBall = field[row][column];
-    while(column < field.length-1) {
+    while (column < field.length - 1) {
 
-        if(theBall === field[row][column + 1]) {
+        if (theBall === field[row][column + 1]) {
             count++;
         } else {
             return count;
@@ -138,27 +138,27 @@ function fieldCountHorizontal(field, row, column) {
     return count;
 }
 
-function removeHorizontalN (field, row, column, num) {
+function removeHorizontalN(field, row, column, num) {
     var numOfBallsToRemove = 0;
-    if(num >= numOfMatchingBalls) {
-       for(var i=0; i<num; i++) {
+    if (num >= numOfMatchingBalls) {
+        for (var i = 0; i < num; i++) {
             field[row][column] = null;
             column++;
-           numOfBallsToRemove++;
+            numOfBallsToRemove++;
         }
     }
     return numOfBallsToRemove;
 }
 
 
-function fieldCountVertical (field, row, column) {
-    if(field[row][column] == null) {
+function fieldCountVertical(field, row, column) {
+    if (field[row][column] == null) {
         return 0;
     }
     var count = 1;
     var theBall = field[row][column];
-    while(row < field.length-1) {
-        if(theBall === field[row + 1][column]) {
+    while (row < field.length - 1) {
+        if (theBall === field[row + 1][column]) {
             count++;
         } else {
             return count;
@@ -168,10 +168,10 @@ function fieldCountVertical (field, row, column) {
     return count;
 }
 
-function removeVerticalN (field, row, column, num) {
+function removeVerticalN(field, row, column, num) {
     var numOfBallsToRemove = 0;
-    if(num >= numOfMatchingBalls) {
-        for(var i=0; i<num; i++) {
+    if (num >= numOfMatchingBalls) {
+        for (var i = 0; i < num; i++) {
             field[row][column] = null;
             row++;
             numOfBallsToRemove++;
@@ -180,20 +180,20 @@ function removeVerticalN (field, row, column, num) {
     return numOfBallsToRemove;
 }
 
-function fieldCountDiagonal (field, row, column, isLeftRightDirection) {
-    if(field[row][column] == null) {
+function fieldCountDiagonal(field, row, column, isLeftRightDirection) {
+    if (field[row][column] == null) {
         return 0;
     }
     var count = 1;
     var theBall = field[row][column];
 
-    while(row < field.length-1 && column < field.length-1) {
-        if(theBall === field[row + 1][column + 1] || theBall === field[row + 1][column -1]) {
+    while (row < field.length - 1 && column < field.length - 1) {
+        if (theBall === field[row + 1][column + 1] || theBall === field[row + 1][column - 1]) {
             count++;
         } else {
             return count;
         }
-        if(isLeftRightDirection) {
+        if (isLeftRightDirection) {
             row++;
             column++;
 
@@ -206,12 +206,12 @@ function fieldCountDiagonal (field, row, column, isLeftRightDirection) {
     return count;
 }
 
-function removeDiagonalN (field, row, column, num, isLeftRightDirection) {
+function removeDiagonalN(field, row, column, num, isLeftRightDirection) {
     var numOfBallsToRemove = 0;
-    if(num >= numOfMatchingBalls) {
-        for(var i=0; i<num; i++) {
+    if (num >= numOfMatchingBalls) {
+        for (var i = 0; i < num; i++) {
             field[row][column] = null;
-            if(isLeftRightDirection) {
+            if (isLeftRightDirection) {
                 row++;
                 column++;
                 numOfBallsToRemove++;
@@ -240,23 +240,21 @@ function fieldRemoveMatchingLines(field) {
         for (var j = 0; j < field[i].length; j++) {
 
             var numHorizontal = fieldCountHorizontal(field, i, j);
-            count+=removeHorizontalN(field, i, j, numHorizontal);
+            count += removeHorizontalN(field, i, j, numHorizontal);
 
             var numVertical = fieldCountVertical(field, i, j);
-            count+=removeVerticalN(field, i, j, numVertical);
+            count += removeVerticalN(field, i, j, numVertical);
 
-            var numDiagonalLeftRight = fieldCountDiagonal(field, i,j, true);
-            count+=removeDiagonalN(field, i, j, numDiagonalLeftRight, true);
+            var numDiagonalLeftRight = fieldCountDiagonal(field, i, j, true);
+            count += removeDiagonalN(field, i, j, numDiagonalLeftRight, true);
 
-            var numDiagonalRightLeft = fieldCountDiagonal(field, i,j, false);
-            count+=removeDiagonalN(field, i, j, numDiagonalRightLeft, false);
+            var numDiagonalRightLeft = fieldCountDiagonal(field, i, j, false);
+            count += removeDiagonalN(field, i, j, numDiagonalRightLeft, false);
 
         }
     }
     return count;
 }
-
-
 
 
 /**
@@ -286,24 +284,84 @@ function fieldPutBallsInRandomPlaces(field, balls) {
  * return object {row: 5, column: 3} if that cell is selected
  */
 function getSelectedFieldCoords(container) {
-    if($('.selected', container).length > 0) {
+    if ($('.selected', container).length > 0) {
         var div = $('.selected', container);
         var row = div.attr('row');
-        var column =  div.attr('column');
+        var column = div.attr('column');
         return {
             row: row,
             column: column
         };
     } else {
-      return null;
+        return null;
     }
 }
 
+function isMoveProper(field, row, column) {
+    //check if the cell is inside the field and empty
+    if((row >= 0 && row < field.length && column >= 0 && column < field.length) && field[row][column] == null) {
+        return true;
+    }
 
+}
 
 function isMovePossible(field, fromRow, fromColumn, toRow, toColumn) {
-    return true;
+
+    console.log('calculating path from ' + fromRow, fromColumn + ' to ' + toRow, toColumn);
+
+
+    var res1 = false, res2 = false, res3 = false, res4 = false;
+    field[fromRow][fromColumn] = 'VISITED';
+    console.log(field);
+
+    if (fromRow == toRow && fromColumn == toColumn) {
+        return true;
+    }
+
+    if (isMoveProper(field, fromRow - 1, fromColumn)) { //move up
+        res1 = isMovePossible(field, fromRow - 1, fromColumn, toRow, toColumn);
+    }
+
+    if (isMoveProper(field, fromRow, fromColumn + 1)) { //move right
+        res2 = isMovePossible(field, fromRow, fromColumn + 1, toRow, toColumn);
+    }
+
+    if (isMoveProper(field, fromRow + 1, fromColumn)) { //move down
+        res3 = isMovePossible(field, fromRow + 1, fromColumn, toRow, toColumn);
+    }
+
+    if (isMoveProper(field, fromRow, fromColumn - 1)) { //move left
+        res4 = isMovePossible(field, fromRow, fromColumn - 1, toRow, toColumn);
+    }
+    var result = res1 || res2 || res3 || res4;
+    return result;
+
 }
+
+function cleanTheField(field) {
+    for (var i = 0; i < field.length; i++) {
+        for (var j = 0; j < field[i].length; j++) {
+            if (field[i][j] == 'VISITED') {
+                field[i][j] = null;
+            }
+        }
+    }
+    console.log(field);
+}
+
+
+var ff =
+    [
+        [null, null, null, null],
+        [null, "XX", "XX", "XX"],
+        [null, null, null, null],
+        [null, "XX", null, null]];
+
+
+//console.log(isMovePossible(ff, 3, 0, 2, 0));
+//cleanTheField(ff);
+
+
 
 function fieldMoveBall(field, fromRow, fromColumn, toRow, toColumn) {
     field[toRow][toColumn] = field[fromRow][fromColumn];
@@ -327,17 +385,10 @@ $(document).ready(function () {
 
     $('#next-round').on('click', function () {
         if (!fieldPutBallsInRandomPlaces(field, randomBalls)) {
-            alert("game over");
+            gameOver.show();
             return false;
         }
         fieldDraw(field, container);
-        randomBalls = getRandomBalls(numOfNewBalls);
-        previewColors(randomBalls, newColors);
-        //fieldRemoveMatchingLines(field);
-        //fieldDraw(field, container);
-
-
-
     });
 
 
@@ -349,32 +400,43 @@ $(document).ready(function () {
         }
 
         //SELECTION: if the cell being clicked has ball in it:
-        if($(this).attr('ball') != undefined) {
+        if ($(this).attr('ball') != undefined) {
             //deselect previously selected ball
             $('#the-field div').removeClass('selected');
             //select currently clicked ball
             $(this).addClass('selected');
 
-        //MOVING: if the cell being clicked has no ball in it:
+            //MOVING: if the cell being clicked has no ball in it:
         } else {
             //if something was selected already
-            if(getSelectedFieldCoords(container) != null) {
-                var fromRow = getSelectedFieldCoords(container).row;
-                var fromColumn = getSelectedFieldCoords(container).column;
-                var toRow = $(this).attr('row');
-                var toColumn = $(this).attr('column');
-                fieldMoveBall(field, fromRow,fromColumn, toRow, toColumn);
-                fieldDraw(field, container);
+            if (getSelectedFieldCoords(container) != null) {
+                var fromRow = Number(getSelectedFieldCoords(container).row);
+                console.log(fromRow);
+                var fromColumn = Number(getSelectedFieldCoords(container).column);
+                console.log(fromColumn);
+                var toRow = Number($(this).attr('row'));
+                var toColumn = Number($(this).attr('column'));
 
-                totalScore+=fieldRemoveMatchingLines(field);
-                fieldDraw(field, container);
+               //console.log(isMovePossible(field, fromRow, fromColumn, toRow, toColumn));
 
-                scores.html('Scores: ' + totalScore);
+                    fieldMoveBall(field, fromRow, fromColumn, toRow, toColumn);
+                    fieldDraw(field, container);
+                    //cleanTheField(field);
+
+                    totalScore += fieldRemoveMatchingLines(field);
+                    fieldDraw(field, container);
+                    scores.html('Scores: ' + totalScore);
+
+
+
+
+
+
+
+
 
                 randomBalls = getRandomBalls(numOfNewBalls);
                 previewColors(randomBalls, newColors);
-
-
 
 
             }
