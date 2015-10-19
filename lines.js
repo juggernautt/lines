@@ -423,27 +423,25 @@ $(document).ready(function () {
         } else {
             //if something was selected already
             if (getSelectedFieldCoords(container) != null) {
+
                 var fromRow = Number(getSelectedFieldCoords(container).row);
-
                 var fromColumn = Number(getSelectedFieldCoords(container).column);
-
                 var toRow = Number($(this).attr('row'));
                 var toColumn = Number($(this).attr('column'));
-                fieldMoveBall(field, fromRow, fromColumn, toRow, toColumn);
-                fieldDraw(field, container);
-                totalScore += fieldRemoveMatchingLines(field);
-                fieldDraw(field, container);
-                scores.html('Scores: ' + totalScore);
-                console.log(field);
-                randomBalls = getRandomBalls(numOfNewBalls);
-                previewColors(randomBalls, newColors);
 
-
-                /*if(isMovePossible(field, fromRow, fromColumn, toRow, toColumn)) {
+                if(isMovePossible(field, fromRow, fromColumn, toRow, toColumn)) {
                     cleanTheField(field);
+                    fieldMoveBall(field, fromRow, fromColumn, toRow, toColumn);
+                    fieldDraw(field, container);
+                    totalScore += fieldRemoveMatchingLines(field);
+                    fieldDraw(field, container);
+                    scores.html('Scores: ' + totalScore);
+                    console.log(field);
+                    randomBalls = getRandomBalls(numOfNewBalls);
+                    previewColors(randomBalls, newColors);
 
-                }*/
-                //cleanTheField(field);
+                }
+                cleanTheField(field);
             }
 
         }
