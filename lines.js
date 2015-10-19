@@ -1,7 +1,7 @@
-var N = 5;
+var N = 9;
 var COLORS = ['RED', 'YELLOW', 'PURPLE', 'GREEN', 'BLUE'];
 var numOfNewBalls = 3;
-var numOfMatchingBalls = 3;
+var numOfMatchingBalls = 5;
 
 
 /**
@@ -79,45 +79,6 @@ function previewColors(colors, container) {
     return true;
 }
 
-/**
- * counts how many divs left without any ball property
- * @param field
- * @returns {number}
- */
-function fieldGetEmptyPlacesCount(field) {
-    var count = 0;
-    for (var i = 0; i < field.length; i++) {
-        for (var j = 0; j < field[i].length; j++) {
-            if (field[i][j] == null) {
-                count++;
-            }
-        }
-    }
-    return count;
-}
-
-
-/**
- * traverse the field and count empty cells. Once you arrive to Xth empty cell - put the ball
- * @param field
- * @param x
- * @param ball
- * @returns {*}
- */
-function fieldPutBallInEmptyCellNumberX(field, x, ball) {
-    var count = 0;
-    for (var i = 0; i < field.length; i++) {
-        for (var j = 0; j < field[i].length; j++) {
-            if (field[i][j] == null) {
-                count++;
-            }
-            if (count == x) {
-                field[i][j] = ball;
-                return true;
-            }
-        }
-    }
-}
 
 
 function fieldCountHorizontal(field, row, column) {
@@ -272,6 +233,47 @@ function fieldRemoveMatchingLines(field) {
 
 
 /**
+ * counts how many divs left without any ball property
+ * @param field
+ * @returns {number}
+ */
+function fieldGetEmptyPlacesCount(field) {
+    var count = 0;
+    for (var i = 0; i < field.length; i++) {
+        for (var j = 0; j < field[i].length; j++) {
+            if (field[i][j] == null) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+
+/**
+ * traverse the field and count empty cells. Once you arrive to Xth empty cell - put the ball
+ * @param field
+ * @param x
+ * @param ball
+ * @returns {*}
+ */
+function fieldPutBallInEmptyCellNumberX(field, x, ball) {
+    var count = 0;
+    for (var i = 0; i < field.length; i++) {
+        for (var j = 0; j < field[i].length; j++) {
+            if (field[i][j] == null) {
+                count++;
+            }
+            if (count == x) {
+                field[i][j] = ball;
+                return true;
+            }
+        }
+    }
+}
+
+
+/**
  * randomly replaces values of field array with the values from random colors array
  * @param field
  * @param balls
@@ -377,8 +379,6 @@ var ff =
 
 
 //console.log(isMovePossible(ff, 3, 0, 2, 0));
-//cleanTheField(ff);
-
 
 
 function fieldMoveBall(field, fromRow, fromColumn, toRow, toColumn) {
@@ -387,6 +387,7 @@ function fieldMoveBall(field, fromRow, fromColumn, toRow, toColumn) {
 }
 
 $(document).ready(function () {
+
     var container = $('#the-field');
     var newColors = $('#new-colors');
     var scores = $('#counter');
@@ -396,15 +397,12 @@ $(document).ready(function () {
     newColors.css('width', numOfNewBalls * 54);
 
     var field = fieldInit(N);
+    fieldPutBallsInRandomPlaces(field, getRandomBalls(numOfNewBalls));
     fieldDraw(field, container);
+
     var randomBalls = getRandomBalls(numOfNewBalls);
     previewColors(randomBalls, newColors);
 
-
-    $('#next-round').on('click', function () {
-        fieldPutBallsInRandomPlaces(field, randomBalls);
-        fieldDraw(field, container);
-    });
 
 
     container.on("click", "div", function () {

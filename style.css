@@ -37,13 +37,7 @@
     margin: 1px;
 }
 
-#next-round {
-    width: 100px;
-    height: 40px;
-    position: absolute;
-    bottom: 220px;
-    left: 520px;
-}
+
 
 [ball='BLUE'] {
     background-color: blue;
