@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    function search (needle, haystack) {
+        for (var key in haystack) {
+
+            if(typeof(haystack[key]) == "number" || typeof(haystack[key]) == "string") {
+                if(haystack[key] == needle) {
+                    return true;
+                }
+            }
+            if(Array.isArray(haystack[key])) {
+                for(var i=0; i<haystack[key].length; i++) {
+                    if(haystack[key][i] === needle ){
+                        return true;
+                    }
+                }
+            } else {
+                for (var innerKey in haystack[key]) {
+                    if(haystack[key][innerKey] == needle) {
+                        return true;
+                    }
+                }
+            }
+
+        }
+        return false;
+
+    }
+
+
+
+
+
+   function isNumberOrString (value1) {
+       return typeof(value1) == "string" || typeof(value1) == "number";
+   }
+
+
+   function searchRecursive(needle,haystack) {
+
+       if(Array.isArray(haystack)) {
+           for(var i=0; i<haystack.length; i++) {
+               if(isNumberOrString(haystack[i])) {
+                   if(haystack[i] === needle) {
+                       return true;
+                   }
+               } else {
+                   searchRecursive(needle, haystack[i]);
+               }
+           }
+
+       } else {
+
+           for(var key in haystack) {
+               if(isNumberOrString(haystack[key])) {
+                   if(haystack[key] === needle) {
+                       return true;
+                   }
+               } else {
+                   searchRecursive(needle, haystack[key]);
+               }
+           }
+       }
+       return false;
+   }
+
+
+
+
+//   searchRecursive(5, { a: 3, b: 5​, c: 9 }); // true
+//   searchRecursive(“5”, { a: 3, b: 5, c: 9 }); // false
+//   searchRecursive(5, { a: 3, b: { u: 8, ‘5’: ‘c’, s: 5​}, c: 9 }); // true
+//   searchRecursive(5, { a: 3, b: { u: 8, ‘5’: ‘c’, s: 7}, c: 9 }); // false
+//   searchRecursive(5, { a: [1, 2, 3, 5​, 7, 9], c: 8, s: 6 }); // true
+//   searchRecursive(5, { a: [1, 2, { s: 4, c: { u: 5​}}, ], s: 9 }); // true
+</script>
+
+</body>
+</html>
+
+
